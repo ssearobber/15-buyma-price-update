@@ -9,20 +9,20 @@ async function smartStoreCrawling(url) {
 
     try {
         browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         args: [
-            '--window-size=1920,1080',
-            '--disable-notifications',
+            // '--window-size=1920,1080',
+            // '--disable-notifications',
             "--no-sandbox",
             "--disable-setuid-sandbox",
         ],
         // slowMo : 1 ,
     });
     page = await browser.newPage();
-    await page.setViewport({
-        width: 1920,
-        height: 1080,
-    });
+    // await page.setViewport({
+    //     width: 1920,
+    //     height: 1080,
+    // });
     await page.setDefaultNavigationTimeout(0);
     await page.goto(url);
 
@@ -30,7 +30,7 @@ async function smartStoreCrawling(url) {
     // 取引ID 크롤링
     console.log('스마트 스토어 가격취득');
     cost = await page.evaluate(() => {
-        const cost = document.querySelector('fieldset strong span:nth-of-type(2)');
+        const cost = document.querySelector('fieldset strong span:nth-of-type(2)').textContent.replace(/[^0-9]/g,"");
         return cost;
     });
     await page.close();

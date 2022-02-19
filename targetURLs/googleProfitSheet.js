@@ -26,24 +26,28 @@ async function googleProfitSheet() {
 
     // rows 취득
     const rows = await sheet.getRows();
+    
+    // 범위 취득 (범위를 A1부터 안하면 에러 발생)
+    await sheet.loadCells('A1:F'+rows.length);
+    console.log(sheet.cellStats); 
+    const a1 = sheet.getCell(0, 0);
+    console.log(a1.value);
 
     // 해당 row번호, url을 취득
-    let googleProfitObject = {}
     for (i = 1 ; i < rows.length ; i ++) {
         // 스마트 스토어 , m.스마트 스토어
         if (rows[i].productURL.match(/smartstore.naver.com/g)
             || rows[i].productURL.match(/m.smartstore.naver.com/g)) {
-                smartStoreCrawling(rows[i].productURL);
-            googleProfitObject.productURL = rows[i].productURL;
+              let cost = await smartStoreCrawling(rows[i].productURL);
+              if(!cost) continue;
+              rows[i].cost = cost;
+              rows[i].save();
         }
         //shopping.naver
         if (rows[i].productURL.match(/shopping.naver.com/g)) {
-            googleProfitObject.productURL = rows[i].productURL;
         }
 
     }
-    
-    return googleProfitObject;
 }
 
 module.exports.googleProfitSheet = googleProfitSheet;
