@@ -29,25 +29,22 @@ async function googleProfitSheet() {
     
     // 범위 취득 (범위를 A1부터 안하면 에러 발생)
     await sheet.loadCells('A1:F'+rows.length);
-    console.log(sheet.cellStats); 
-    const a1 = sheet.getCell(0, 0);
-    console.log(a1.value);
 
     // 해당 row번호, url을 취득
     for (i = 1 ; i < rows.length ; i ++) {
         // 스마트 스토어 , m.스마트 스토어
-        if (rows[i].productURL.match(/smartstore.naver.com/g)
-            || rows[i].productURL.match(/m.smartstore.naver.com/g)) {
-              let cost = await smartStoreCrawling(rows[i].productURL);
+        if (sheet.getCell(i+1, 2).value.match(/smartstore.naver.com/g)
+            || sheet.getCell(i+1, 2).value.match(/m.smartstore.naver.com/g)) {
+              let cost = await smartStoreCrawling(sheet.getCell(i+1, 2).value);
               if(!cost) continue;
-              rows[i].cost = cost;
-              rows[i].save();
+              sheet.getCell(i+1, 4).value = Number(cost);
         }
         //shopping.naver
-        if (rows[i].productURL.match(/shopping.naver.com/g)) {
+        if (sheet.getCell(i+1, 2).value.match(/shopping.naver.com/g)) {
         }
 
     }
+    await sheet.saveUpdatedCells();
 }
 
 module.exports.googleProfitSheet = googleProfitSheet;
