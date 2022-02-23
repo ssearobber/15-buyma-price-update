@@ -44,6 +44,7 @@ async function googleProfitSheet() {
                 cost = await smartStoreCrawling(sheet.getCell(i+1, 2).value);
                 if(!cost) continue;
                 await PriceIsUpdated(sheet, cost, today);
+                await sheet.saveUpdatedCells();
         }
         //shopping.naver
         if (sheet.getCell(i+1, 2).value.match(/shopping.naver.com/g)) {
@@ -59,10 +60,12 @@ async function googleProfitSheet() {
 
 //가격이 갱신되었을 경우, 가격을 갱신 후 
 async function PriceIsUpdated(sheet, cost, today) {
+    let beforePrice = sheet.getCell(i+1, 4).value;
     if(sheet.getCell(i+1, 4).value != Number(cost)){
         sheet.getCell(i+1, 4).value = Number(cost);
         sheet.getCell(i+1, 4).backgroundColor = { "green": 555, };
-        sheet.getCell(i+1, 4).note = today.toLocaleDateString()+ ' ' + '値段更新があります!';
+        sheet.getCell(i+1, 4).note = today.toLocaleDateString() + ' ' 
+            + beforePrice + 'won → '　+ cost + 'wonへ'  + '値段変更があります。';
     }
 }
 
