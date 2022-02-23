@@ -1,5 +1,6 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { smartStoreCrawling } = require('./smartStoreCrawling');
+const { shoppingNaverCrawling } = require('./shoppingNaverCrawling');
 
 async function googleProfitSheet() {
 
@@ -29,22 +30,40 @@ async function googleProfitSheet() {
     
     // 범위 취득 (범위를 A1부터 안하면 에러 발생)
     await sheet.loadCells('A1:F'+rows.length);
-
+    //오늘 일짜
+    let today = new Date();
+    //변수 초기화
+    let cost = "";
     // 해당 row번호, url을 취득
     for (i = 1 ; i < rows.length ; i ++) {
+
+        if(!sheet.getCell(i+1, 2).value) continue;
         // 스마트 스토어 , m.스마트 스토어
         if (sheet.getCell(i+1, 2).value.match(/smartstore.naver.com/g)
             || sheet.getCell(i+1, 2).value.match(/m.smartstore.naver.com/g)) {
-              let cost = await smartStoreCrawling(sheet.getCell(i+1, 2).value);
-              if(!cost) continue;
-              sheet.getCell(i+1, 4).value = Number(cost);
+                cost = await smartStoreCrawling(sheet.getCell(i+1, 2).value);
+                if(!cost) continue;
+                await PriceIsUpdated(sheet, cost, today);
         }
         //shopping.naver
         if (sheet.getCell(i+1, 2).value.match(/shopping.naver.com/g)) {
+                cost = await shoppingNaverCrawling(sheet.getCell(i+1, 2).value);
+                if(!cost) continue;
+                await PriceIsUpdated(sheet, cost ,today);
+
         }
 
     }
     await sheet.saveUpdatedCells();
+}
+
+//가격이 갱신되었을 경우, 가격을 갱신 후 
+async function PriceIsUpdated(sheet, cost, today) {
+    if(sheet.getCell(i+1, 4).value != Number(cost)){
+        sheet.getCell(i+1, 4).value = Number(cost);
+        sheet.getCell(i+1, 4).backgroundColor = { "green": 555, };
+        sheet.getCell(i+1, 4).note = today.toLocaleDateString()+ ' ' + '値段更新があります!';
+    }
 }
 
 module.exports.googleProfitSheet = googleProfitSheet;

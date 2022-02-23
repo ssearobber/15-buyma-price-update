@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 
 // buyma 取引ID 크롤링
-async function smartStoreCrawling(url) {
+async function shoppingNaverCrawling(url) {
     
     let browser = {};
     let page = {};
@@ -45,4 +45,4 @@ async function smartStoreCrawling(url) {
     } 
 }
 
-module.exports.smartStoreCrawling = smartStoreCrawling;
+module.exports.shoppingNaverCrawling = shoppingNaverCrawling;
