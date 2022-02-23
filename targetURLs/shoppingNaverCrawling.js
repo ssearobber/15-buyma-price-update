@@ -25,7 +25,7 @@ async function shoppingNaverCrawling(url) {
     await page.setDefaultNavigationTimeout(0);
     await page.goto(url);
 
-    await page.waitForTimeout(10000); // 없으면 크롤링 안됨 .textContent.replace(/,/g, ''),
+    await page.waitForTimeout(10000); // 없으면 크롤링 안됨 .
     // 取引ID 크롤링
     console.log('스마트 스토어 가격취득');
     cost = await page.evaluate(() => {
