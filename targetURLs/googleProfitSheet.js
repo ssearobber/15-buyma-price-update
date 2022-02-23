@@ -22,8 +22,8 @@ async function googleProfitSheet() {
     await doc.loadInfo();
 
     // 利益計算 시트ID로 시트취득
-    // const sheet = doc.sheetsById[process.env.GOOGLE_PROFIT_SHEET_ID || googleProfitSheetId];
-    const sheet = doc.sheetsById[process.env.GOOGLE_PROFIT_SHEET_TEST_ID];
+    const sheet = doc.sheetsById[process.env.GOOGLE_PROFIT_SHEET_ID || googleProfitSheetId];
+    // const sheet = doc.sheetsById[process.env.GOOGLE_PROFIT_SHEET_TEST_ID];
 
     // rows 취득
     const rows = await sheet.getRows();
