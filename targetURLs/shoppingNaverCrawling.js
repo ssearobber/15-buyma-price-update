@@ -28,8 +28,11 @@ async function shoppingNaverCrawling(url) {
     await page.waitForTimeout(10000); // 없으면 크롤링 안됨 .
     // 取引ID 크롤링
     console.log('스마트 스토어 가격취득');
+    let cost = "";
     cost = await page.evaluate(() => {
-        const cost = document.querySelector('fieldset strong span:nth-of-type(2)').textContent.replace(/[^0-9]/g,"");
+        let cost;
+        if(!document.querySelector('fieldset strong span:nth-of-type(2)')) return cost;
+        cost = document.querySelector('fieldset strong span:nth-of-type(2)').textContent.replace(/[^0-9]/g,"");
         return cost;
     });
     await page.close();
