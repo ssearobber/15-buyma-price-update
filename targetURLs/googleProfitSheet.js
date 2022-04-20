@@ -42,6 +42,7 @@ async function googleProfitSheet() {
       urlCell.value.match(/smartstore.naver.com/g) ||
       urlCell.value.match(/m.smartstore.naver.com/g)
     ) {
+      console.log('url : ', urlCell.value);
       cost = await smartStoreCrawling(urlCell.value);
       if (!cost) continue;
       await PriceIsUpdated(sheet, cost, today);
@@ -49,6 +50,7 @@ async function googleProfitSheet() {
     }
     //shopping.naver
     if (urlCell.value.match(/shopping.naver.com/g)) {
+      console.log('url : ', urlCell.value);
       cost = await shoppingNaverCrawling(urlCell.value);
       if (!cost) continue;
       await PriceIsUpdated(sheet, cost, today);
