@@ -63,8 +63,6 @@ async function googleProfitSheet() {
 async function PriceIsUpdated(sheet, cost, today) {
   let priceCell = sheet.getCell(i + 1, 4);
   if (priceCell.value != Number(cost)) {
-    priceCell.value = Number(cost);
-    priceCell.backgroundColor = { green: 555 };
     priceCell.note =
       today.toLocaleDateString() +
       ' ' +
@@ -73,6 +71,8 @@ async function PriceIsUpdated(sheet, cost, today) {
       cost +
       'wonへ' +
       '値段変更があります。';
+    priceCell.value = Number(cost);
+    priceCell.backgroundColor = { green: 555 };
   }
 }
 
