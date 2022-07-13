@@ -28,14 +28,14 @@ async function googleProfitSheet() {
   const rows = await sheet.getRows();
 
   // 범위 취득 (범위를 A1부터 안하면 에러 발생)
-  await sheet.loadCells('A1:F' + rows.length);
+  await sheet.loadCells('A1:H' + rows.length);
   //오늘 일짜
   let today = new Date();
   //변수 초기화
   let cost = '';
   // 해당 row번호, url을 취득
   for (i = 1; i < rows.length; i++) {
-    let urlCell = sheet.getCell(i + 1, 2);
+    let urlCell = sheet.getCell(i + 1, 4);
     if (!urlCell.value) continue;
     // 스마트 스토어 , m.스마트 스토어
     if (
@@ -61,7 +61,7 @@ async function googleProfitSheet() {
 
 //가격이 갱신되었을 경우, 가격을 갱신 후
 async function PriceIsUpdated(sheet, cost, today) {
-  let priceCell = sheet.getCell(i + 1, 4);
+  let priceCell = sheet.getCell(i + 1, 7);
   if (priceCell.value != Number(cost)) {
     priceCell.note =
       today.toLocaleDateString() +
