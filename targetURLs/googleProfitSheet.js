@@ -32,7 +32,9 @@ async function googleProfitSheet() {
   //오늘 일짜
   let today = new Date();
   //변수 초기화
-  let cost = '';
+  let obj;
+  let soldOutItem = sheet.getCell(1, 6).value;
+  let priceItem = sheet.getCell(1, 7).value;
   // 해당 row번호, url을 취득
   for (i = 1; i < rows.length; i++) {
     let urlCell = sheet.getCell(i + 1, 4);
@@ -43,25 +45,34 @@ async function googleProfitSheet() {
       urlCell.value.match(/m.smartstore.naver.com/g)
     ) {
       console.log('url : ', urlCell.value);
-      cost = await smartStoreCostCrawling(urlCell.value);
-      if (!cost) continue;
-      await PriceIsUpdated(sheet, cost, today);
+      obj = await smartStoreCostCrawling(urlCell.value);
+      if (!obj.cost) continue;
+      if (priceItem == '仕入原価（基本値段）') await priceIsUpdated(sheet, obj.cost, today, i);
+      if (soldOutItem == '売り切れ') soldOutIsUpdated(sheet, obj, today, i);
       await sheet.saveUpdatedCells();
     }
     //shopping.naver
     if (urlCell.value.match(/shopping.naver.com/g)) {
       console.log('url : ', urlCell.value);
-      cost = await shoppingNaverCostCrawling(urlCell.value);
-      if (!cost) continue;
-      await PriceIsUpdated(sheet, cost, today);
+      obj = await shoppingNaverCostCrawling(urlCell.value);
+      if (!obj.cost) continue;
+      if (priceItem == '仕入原価（基本値段）') await priceIsUpdated(sheet, obj.cost, today, i);
       await sheet.saveUpdatedCells();
     }
     //marketB
     if (urlCell.value.match(/marketb.kr/g)) {
       console.log('url : ', urlCell.value);
-      cost = await marketBCostCrawling(urlCell.value);
-      if (!cost) continue;
-      await PriceIsUpdated(sheet, cost, today);
+      obj = await marketBCostCrawling(urlCell.value);
+      if (!obj.cost) continue;
+      if (priceItem == '仕入原価（基本値段）') await priceIsUpdated(sheet, obj.cost, today, i);
+      await sheet.saveUpdatedCells();
+    }
+    //casamia
+    if (urlCell.value.match(/casamia.ssg.com/g)) {
+      console.log('url : ', urlCell.value);
+      obj = await casamiaSsgCostCrawling(urlCell.value);
+      if (!obj.cost) continue;
+      if (priceItem == '仕入原価（基本値段）') await priceIsUpdated(sheet, obj.cost, today, i);
       await sheet.saveUpdatedCells();
     }
   }
@@ -69,7 +80,7 @@ async function googleProfitSheet() {
 }
 
 //가격이 갱신되었을 경우, 가격을 갱신 후
-async function PriceIsUpdated(sheet, cost, today) {
+async function priceIsUpdated(sheet, cost, today, i) {
   let priceCell = sheet.getCell(i + 1, 7);
   if (priceCell.value != Number(cost)) {
     priceCell.note =
@@ -82,6 +93,24 @@ async function PriceIsUpdated(sheet, cost, today) {
       '値段変更があります。';
     priceCell.value = Number(cost);
     priceCell.backgroundColor = { green: 555 };
+  }
+}
+
+//품절이 갱신되었을 경우, 품절을 갱신
+async function soldOutIsUpdated(sheet, obj, today, i) {
+  let soldOutCell = sheet.getCell(i + 1, 6);
+
+  if (!obj.soldOut.length) {
+    soldOutCell.value = '';
+    // soldOutCell.backgroundColor = { white: 555 };
+  } else {
+    let stringAppend = '';
+    for (soldOutObject of obj.soldOut) {
+      stringAppend += '売り切れ商品 : ' + soldOutObject.optionName1 + '\n';
+    }
+    soldOutCell.note = today.toLocaleDateString() + ' ' + '売り切れ商品があります。';
+    soldOutCell.value = stringAppend;
+    soldOutCell.backgroundColor = { red: 555 };
   }
 }
 

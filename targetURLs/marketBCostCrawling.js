@@ -25,6 +25,11 @@ async function marketBCostCrawling(url) {
     await page.goto(url);
 
     await page.waitForTimeout(10000); // 없으면 크롤링 안됨 .
+
+    let obj = {};
+    obj.cost = '';
+    obj.soldOut = [];
+
     // 取引ID 크롤링
     console.log('마켓비 가격취득');
     let cost = '';
@@ -38,7 +43,8 @@ async function marketBCostCrawling(url) {
     await browser.close();
     console.log('마켓비 종료.');
 
-    return cost;
+    obj.cost = cost;
+    return obj;
   } catch (e) {
     console.log(e);
     await page.close();

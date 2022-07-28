@@ -25,6 +25,11 @@ async function casamiaSsgCostCrawling(url) {
     await page.goto(url);
 
     await page.waitForTimeout(10000); // 없으면 크롤링 안됨 .
+
+    let obj = {};
+    obj.cost = '';
+    obj.soldOut = [];
+
     // 取引ID 크롤링
     console.log('까사미아 가격취득');
     let cost = '';
@@ -38,7 +43,8 @@ async function casamiaSsgCostCrawling(url) {
     await browser.close();
     console.log('까사미아 종료.');
 
-    return cost;
+    obj.cost = cost;
+    return obj;
   } catch (e) {
     console.log(e);
     await page.close();

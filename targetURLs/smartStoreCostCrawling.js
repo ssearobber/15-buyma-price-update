@@ -25,6 +25,27 @@ async function smartStoreCostCrawling(url) {
     await page.goto(url);
 
     await page.waitForTimeout(10000); // 없으면 크롤링 안됨 .
+
+    let obj = {};
+    obj.cost = '';
+    obj.soldOut = [];
+    // 품절 확인
+    const code1 = await page.$x('//script[contains(., "options")]');
+    if (code1.length != 0) {
+      const soldOutStringArr = await page.evaluate(
+        (el) => el.innerHTML.match(/(?<=\"options\":\[)(.*?)(?=\])/g),
+        code1[0],
+      );
+      let soldOutStringArr1 = '[' + soldOutStringArr[1] + ']';
+      let soldOutObjectArr = JSON.parse(soldOutStringArr1);
+      for (soldOutObject of soldOutObjectArr) {
+        if (soldOutObject.stockQuantity == 0) {
+          // obj.optionName1 = soldOutObject.optionName1;
+          // obj.stockQuantity = soldOutObject.stockQuantity;
+          obj.soldOut.push(soldOutObject);
+        }
+      }
+    }
     // 取引ID 크롤링
     console.log('스마트 스토어 가격취득');
     let cost = '';
@@ -40,7 +61,8 @@ async function smartStoreCostCrawling(url) {
     await browser.close();
     console.log('스마트 스토어 종료.');
 
-    return cost;
+    obj.cost = cost;
+    return obj;
   } catch (e) {
     console.log(e);
     await page.close();
