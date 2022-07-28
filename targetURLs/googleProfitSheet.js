@@ -1,6 +1,6 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { smartStoreCrawling } = require('./smartStoreCrawling');
-const { shoppingNaverCrawling } = require('./shoppingNaverCrawling');
+const { smartStoreCostCrawling } = require('./smartStoreCostCrawling');
+const { shoppingNaverCostCrawling } = require('./shoppingNaverCostCrawling');
 
 async function googleProfitSheet() {
   // 시트 url중 값
@@ -43,7 +43,7 @@ async function googleProfitSheet() {
       urlCell.value.match(/m.smartstore.naver.com/g)
     ) {
       console.log('url : ', urlCell.value);
-      cost = await smartStoreCrawling(urlCell.value);
+      cost = await smartStoreCostCrawling(urlCell.value);
       if (!cost) continue;
       await PriceIsUpdated(sheet, cost, today);
       await sheet.saveUpdatedCells();
@@ -51,9 +51,18 @@ async function googleProfitSheet() {
     //shopping.naver
     if (urlCell.value.match(/shopping.naver.com/g)) {
       console.log('url : ', urlCell.value);
-      cost = await shoppingNaverCrawling(urlCell.value);
+      cost = await shoppingNaverCostCrawling(urlCell.value);
       if (!cost) continue;
       await PriceIsUpdated(sheet, cost, today);
+      await sheet.saveUpdatedCells();
+    }
+    //marketB
+    if (urlCell.value.match(/marketb.kr/g)) {
+      console.log('url : ', urlCell.value);
+      cost = await marketBCostCrawling(urlCell.value);
+      if (!cost) continue;
+      await PriceIsUpdated(sheet, cost, today);
+      await sheet.saveUpdatedCells();
     }
   }
   await sheet.saveUpdatedCells();

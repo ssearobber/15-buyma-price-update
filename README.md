@@ -12,3 +12,6 @@
 
 - "This cell has not been loaded yet" 에러발생
 - sheet.getCell()수정
+
+2022/07/13
+품절 판단 추가
