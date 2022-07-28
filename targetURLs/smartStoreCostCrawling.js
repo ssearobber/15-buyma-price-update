@@ -36,7 +36,7 @@ async function smartStoreCostCrawling(url) {
         (el) => el.innerHTML.match(/(?<=\"options\":\[)(.*?)(?=\])/g),
         code1[0],
       );
-      let soldOutStringArr1 = '[' + soldOutStringArr[1] + ']';
+      let soldOutStringArr1 = '[' + soldOutStringArr[2] + ']';
       let soldOutObjectArr = JSON.parse(soldOutStringArr1);
       for (soldOutObject of soldOutObjectArr) {
         if (soldOutObject.stockQuantity == 0) {

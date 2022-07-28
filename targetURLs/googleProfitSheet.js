@@ -1,6 +1,8 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { smartStoreCostCrawling } = require('./smartStoreCostCrawling');
 const { shoppingNaverCostCrawling } = require('./shoppingNaverCostCrawling');
+const { marketBCostCrawling } = require('./marketBCostCrawling');
+const { casamiaSsgCostCrawling } = require('./casamiaSsgCostCrawling');
 
 async function googleProfitSheet() {
   // 시트 url중 값
@@ -36,7 +38,7 @@ async function googleProfitSheet() {
   let soldOutItem = sheet.getCell(1, 6).value;
   let priceItem = sheet.getCell(1, 7).value;
   // 해당 row번호, url을 취득
-  for (i = 1; i < rows.length; i++) {
+  for (i = 271; i < rows.length; i++) {
     let urlCell = sheet.getCell(i + 1, 4);
     if (!urlCell.value) continue;
     // 스마트 스토어 , m.스마트 스토어
