@@ -48,7 +48,7 @@ async function googleProfitSheet() {
     ) {
       console.log('url : ', urlCell.value);
       obj = await smartStoreCostCrawling(urlCell.value);
-      if (!obj.cost) continue;
+      if (!obj?.cost) continue;
       if (priceItem == '仕入原価（基本値段）') await priceIsUpdated(sheet, obj.cost, today, i);
       if (soldOutItem == '売り切れ') soldOutIsUpdated(sheet, obj, today, i);
       await sheet.saveUpdatedCells();
@@ -57,7 +57,7 @@ async function googleProfitSheet() {
     if (urlCell.value.match(/shopping.naver.com/g)) {
       console.log('url : ', urlCell.value);
       obj = await shoppingNaverCostCrawling(urlCell.value);
-      if (!obj.cost) continue;
+      if (!obj?.cost) continue;
       if (priceItem == '仕入原価（基本値段）') await priceIsUpdated(sheet, obj.cost, today, i);
       await sheet.saveUpdatedCells();
     }
@@ -65,7 +65,7 @@ async function googleProfitSheet() {
     if (urlCell.value.match(/marketb.kr/g)) {
       console.log('url : ', urlCell.value);
       obj = await marketBCostCrawling(urlCell.value);
-      if (!obj.cost) continue;
+      if (!obj?.cost) continue;
       if (priceItem == '仕入原価（基本値段）') await priceIsUpdated(sheet, obj.cost, today, i);
       await sheet.saveUpdatedCells();
     }
@@ -73,7 +73,7 @@ async function googleProfitSheet() {
     if (urlCell.value.match(/casamia.ssg.com/g)) {
       console.log('url : ', urlCell.value);
       obj = await casamiaSsgCostCrawling(urlCell.value);
-      if (!obj.cost) continue;
+      if (!obj?.cost) continue;
       if (priceItem == '仕入原価（基本値段）') await priceIsUpdated(sheet, obj.cost, today, i);
       await sheet.saveUpdatedCells();
     }
