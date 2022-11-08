@@ -14,10 +14,10 @@ Array.prototype.asyncForEach = async function (callback) {
 };
 
 // 해당 스마트스토어의 가격을 크롤링
-if (date % 3 != 0) {
+// if (date % 3 != 0) {
   try {
     googleProfitSheet();
   } catch (error) {
     console.log(error);
   }
-}
+// }
